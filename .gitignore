@@ -1,0 +1,12 @@
+# Router runtime files: local only, never commit
+optional/jev-router/ON
+optional/jev-router/stats.jsonl
+optional/jev-router/effort.jsonl
+optional/jev-router/skills.json
+optional/jev-router/skills.allow
+optional/jev-router/eval.json
+__pycache__/
+.DS_Store
+
+# A global gitignore may exclude CLAUDE.md; this one is a template and must ship
+!templates/vault/CLAUDE.md

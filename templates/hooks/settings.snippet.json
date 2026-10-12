@@ -1,0 +1,27 @@
+{
+  "_comment": "Merge these keys into ~/.claude/settings.json. Do not replace the file. Paths assume the hooks were copied to ~/.claude/hooks/. The router hook is in optional/jev-router/README.md.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "bash \"$HOME/.claude/hooks/deny-dangerous.sh\"" }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "auto",
+        "hooks": [
+          { "type": "command", "command": "bash \"$HOME/.claude/hooks/precompact-flush.sh\"" }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"$HOME/.claude/statusline-command.sh\"",
+    "refreshInterval": 10
+  },
+  "outputStyle": "Tight"
+}

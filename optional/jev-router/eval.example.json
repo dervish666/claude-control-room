@@ -1,0 +1,7 @@
+{"cases": [
+  {"message": "what is 72 fahrenheit in celsius", "expect": "router-tiny"},
+  {"message": "fix the typo in the README heading of acme-api", "expect": "router-everyday"},
+  {"message": "work out why the blog build fails only on CI and fix it", "expect": "router-large"},
+  {"message": "should we split acme-api into two services before the launch", "expect": "router-hardest"},
+  {"message": "build a landing page for the acme app with a hero and a pricing section", "expect": "router-frontend-build"}
+]}
