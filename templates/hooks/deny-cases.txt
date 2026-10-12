@@ -1,0 +1,32 @@
+# Cases for test-deny-dangerous.sh: EXPECT<TAB>command. @HOME@ becomes your real $HOME.
+# Kept in a file because typing these into a session's Bash trips the installed hook.
+DENY	rm -rf ~
+DENY	rm -rf -- "$HOME"
+DENY	rm -rf ${HOME}
+DENY	rm -rf "$HOME"/
+DENY	rm -rf ./build ~
+DENY	rm -rf /
+DENY	rm -fr /*
+DENY	rm -r ~/*
+DENY	rm --recursive --force ~/
+DENY	sudo rm -rf --no-preserve-root /
+DENY	cd /tmp && rm -rf $HOME
+DENY	bash -c "rm -rf ~"
+DENY	rm -rf ~ "unbalanced
+DENY	rm -rf @HOME@
+DENY	rm -rf @HOME@/
+ALLOW	rm -rf ~/tmp/x
+ALLOW	rm -rf ./home
+ALLOW	rm -rf ./build
+ALLOW	rm -rf "$HOME/tmp/cache"
+ALLOW	rm -rf @HOME@/tmp/x
+ALLOW	rm ~
+ALLOW	echo removing the build folder
+DENY	git push --force origin main
+DENY	git -C x push -f
+DENY	git push origin +main
+ALLOW	git push --force-with-lease
+DENY	git worktree add ../x
+ALLOW	git worktree list
+DENY	mkfs.ext4 /dev/sda
+ALLOW	ls -la

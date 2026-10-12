@@ -8,7 +8,7 @@ Merge `templates/hooks/settings.snippet.json` into `~/.claude/settings.json`. Ne
 
 Denies a short list of commands that cannot be undone:
 
-- `rm -rf` aimed at `/`, `~` or `$HOME`
+- `rm` with `-r`, `-f`, `--recursive` or `--force` where any target is `/`, `~`, `$HOME`, `${HOME}`, your home directory's real path, or a glob of those (`~/*`, `/*`). The hook tokenises the arguments with `shlex`, so quoting, `--`, a trailing slash or an extra target (`rm -rf ./build ~`) does not hide it. Commands inside a quoted string, such as `bash -c "..."`, are checked too.
 - `git push --force`, `-f` or a `+refspec` (`--force-with-lease` passes)
 - disk wipes (`mkfs`, `diskutil erase`)
 - `git worktree add` (see [12](12-risks-and-costs.md) for why)
@@ -17,7 +17,11 @@ The list is tight on purpose. A guard that fires on ordinary work gets switched 
 
 When I extended the git rules, my first version missed `git -C <dir> push --force`, because the global option sat between `git` and `push`. The current patterns allow global options in that gap. Test every new pattern against both a command it must block and a near miss it must allow; the script reads hook JSON on stdin, so a loop over a file of cases does it.
 
-One more lesson: this hook blocks its own test commands if you type them into Bash, because the test string contains the pattern. Put test cases in a file.
+My first `rm` rule was a regex, and it missed `rm -rf -- "$HOME"`, `rm -rf ${HOME}` and `rm -rf ./build ~`. An outside audit caught it. Tokenising the arguments and judging each target fixed all of them.
+
+The cases live in `templates/hooks/deny-cases.txt`, and `bash templates/hooks/test-deny-dangerous.sh` runs them: 30 cases, commands that must be denied and near misses that must pass (`rm -rf ~/tmp/x`, `rm -rf ./home`). They are in a file because this hook blocks its own test commands if you type them into Bash.
+
+The hook reads its JSON on stdin. Passing it as a command-line argument fails on a large command with "argument list too long".
 
 ## precompact-flush.sh (PreCompact, auto)
 

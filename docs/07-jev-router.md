@@ -53,4 +53,4 @@ The router cannot reach messages kept in the main thread, which in my logs is mo
 
 ## Privacy
 
-While it is on, every message you type is posted to `api.typesafe.ai`. The effort plugin also sends the last 2,500 characters of the previous reply. Turn the router off for anything private, and keep the API key in your environment, never in a synced folder.
+While it is on, every message you type is posted to `api.typesafe.ai`, and so is the name and description of every skill in the router's catalogue (all of `~/.claude/skills` plus the plugin skills in `skills.allow`), on every message. If a skill description names a client, a person or an internal system, that leaves the machine too; `routerctl skills` lists what is sent. The effort plugin also sends the last 2,500 characters of the previous reply. The local decision log, `stats.jsonl`, keeps the first 90 characters of each message and is created mode 0600. Turn the router off for anything private, and keep the API key in your environment, never in a synced folder.

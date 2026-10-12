@@ -69,7 +69,7 @@ If you would rather read first, go in order:
 | `templates/dispatcher/ledger.md` | Empty ledger in the format the dispatcher keeps | Core |
 | `templates/vault/` | Vault conventions, index, log and note templates | Core |
 | `templates/skills/` | `session-log`, `skill-refiner`, `falsify-first` | Core |
-| `templates/hooks/` | `deny-dangerous.sh`, `precompact-flush.sh`, a settings snippet | Recommended |
+| `templates/hooks/` | `deny-dangerous.sh` with its test cases, `precompact-flush.sh`, a settings snippet | Recommended |
 | `templates/output-styles/tight.md` | Short-answer output style | Optional |
 | `templates/statusline-command.sh` | Status line: branch, model, effort, context, rate limits | Optional |
 | `optional/jev-router/` | Message classifier hook and six helper agents | Optional, needs a paid third-party API |

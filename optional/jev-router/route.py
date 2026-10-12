@@ -30,12 +30,15 @@ Environment:
     ROUTER_LOG_PREVIEW       set to 0 to keep message previews out of stats.jsonl
 """
 
+from __future__ import annotations  # keeps the type hints valid on Python 3.9
+
 import argparse
 import json
 import os
 import re
 import sys
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -260,6 +263,17 @@ def questions(cat: dict) -> dict:
     return q
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Refuse every redirect, so the bearer key is only ever sent to ENDPOINT."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(req.full_url, code,
+                                     f"redirect to {newurl} refused", headers, fp)
+
+
+_OPENER = urllib.request.build_opener(_NoRedirect)
+
+
 def ask(state: dict, qs: dict, key: str, deadline: float) -> tuple[dict, dict]:
     body = json.dumps({"state": state, "model": MODEL, "questions": qs}).encode()
     req = urllib.request.Request(
@@ -268,7 +282,7 @@ def ask(state: dict, qs: dict, key: str, deadline: float) -> tuple[dict, dict]:
     )
     # No retries on purpose: a retry is a second deadline.
     remaining = max(0.1, deadline - time.monotonic())
-    with urllib.request.urlopen(req, timeout=remaining) as r:
+    with _OPENER.open(req, timeout=remaining) as r:
         payload = json.load(r)
     return payload["answers"], payload.get("usage", {})
 
@@ -292,9 +306,9 @@ def pick_lane(size: str, kind: str | None, kind_conf: float) -> tuple[str, str, 
 def decide(message: str, key: str) -> dict:
     """Classify one message. Raises on any failure; hook mode catches and logs it."""
     started = time.monotonic()
+    deadline = started + BUDGET  # the budget covers the catalogue build too
     cat = catalogue()
-    answers, usage = ask({"message": message[:MAX_CHARS]}, questions(cat), key,
-                         time.monotonic() + BUDGET)
+    answers, usage = ask({"message": message[:MAX_CHARS]}, questions(cat), key, deadline)
 
     size = answers["size"]["choice"]
     conf = float(answers["size"]["confidence"])
@@ -353,7 +367,12 @@ def is_typed(message: str) -> bool:
 
 def log(row: dict) -> None:
     try:
-        with STATS.open("a") as fh:
+        # The log holds message previews, so it is private to you: created 0600, and
+        # tightened to 0600 if an older copy was looser.
+        ROOT.mkdir(parents=True, exist_ok=True)
+        fd = os.open(STATS, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
+        os.fchmod(fd, 0o600)
+        with os.fdopen(fd, "a") as fh:
             fh.write(json.dumps(row) + "\n")
     except OSError as ex:
         print(f"route.py: could not write {STATS}: {ex}", file=sys.stderr)

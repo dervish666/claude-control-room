@@ -20,7 +20,9 @@
 |---|---|---|
 | Your messages and session context | Anthropic | Always; it is how Claude Code works |
 | Each typed message, up to 4,000 characters | TypeSafe (`api.typesafe.ai`) | Only while the Jev router is on |
+| Name and description of every skill in the router's catalogue | TypeSafe | Every message, while the Jev router is on |
 | The tail of the previous reply | TypeSafe | Only with the effort plugin on |
+| The audit prompt, and any file contents Codex reads while auditing | OpenAI | Each time a manager spawns `codex-auditor` |
 | Push notification text | Your phone, through the Claude app | Each `NEEDS OWNER` push |
 | Vault contents | Wherever you sync or serve it | If you set up sync or remote access |
 

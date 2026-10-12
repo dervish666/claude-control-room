@@ -57,7 +57,7 @@ Rules for each component:
 - **`templates/dispatcher/ledger.md`** to `~/.claude/dispatcher/ledger.md`, only with the dispatcher. Fill the aliases table from the repos in step 1.
 - **`templates/vault/`** into the vault. Add `CLAUDE.md`, `index.md` and `log.md` only if missing; otherwise propose additions. Put note templates in the vault's templates folder, skipping any name that exists. Fill the project map in the vault's `CLAUDE.md` from the user's repos. If the vault is new, also create `projects/`, `journal/`, `topics/`, `daily/`, `sources/`, and suggest `git init` (ask).
 - **`templates/skills/*`** to `~/.claude/skills/`. Same collision rule as agents.
-- **`templates/hooks/*.sh`** to `~/.claude/hooks/`, then `chmod +x`.
+- **`templates/hooks/`**: `deny-dangerous.sh`, `precompact-flush.sh`, `test-deny-dangerous.sh` and `deny-cases.txt` to `~/.claude/hooks/`, then `chmod +x` the scripts. If the user already has a hook of the same name, skip it and show both.
 - **`templates/hooks/settings.snippet.json`** into `~/.claude/settings.json`. Merge with a script that parses the JSON, appends hook entries to existing event arrays, and leaves every other key untouched. Skip `statusLine` or `outputStyle` if already set, unless the user asks. Show the before and after diff.
 - **`templates/statusline-command.sh`** to `~/.claude/`, only if `jq` is installed and no status line is set.
 - **`templates/output-styles/tight.md`** to `~/.claude/output-styles/`.
@@ -78,7 +78,7 @@ Work one component at a time, in the plan's order. For each: back up, show the d
 
 Run each check and report pass or fail with the evidence. A check that could not fail proves nothing, so each one includes a case that must fail.
 
-1. **Deny hook.** Write a case file with one line per command: a home-directory `rm -rf`, a force push, `git worktree add ../x`, and safe near-misses (`rm -rf ./build`, a `--force-with-lease` push, `git worktree list`). Pipe each through the hook as `{"tool_input":{"command":"..."}}`. The first three must print a deny; the rest must print nothing. Use a file, because typing the dangerous strings into Bash will trip the installed hook itself.
+1. **Deny hook.** Run `bash ~/.claude/hooks/test-deny-dangerous.sh ~/.claude/hooks/deny-dangerous.sh`. It feeds every case in `deny-cases.txt` (commands that must be denied, and near misses that must pass) through the installed hook and must report all passed. Do not type the dangerous cases into Bash yourself: the installed hook will block your own command.
 2. **Compaction hook.** Pipe `{"session_id":"ccr-smoke"}` in twice. The first run must block, the second must pass. Delete the marker file afterwards.
 3. **Status line**, if installed. Pipe a sample payload with a model name, a context percentage and rate limits, and confirm each appears.
 4. **Vault.** With the user's yes, create `topics/control-room-smoke-test.md` through the notes MCP server, find it with a search, then delete it. If search does not find a note you just wrote, the index is not watching the vault; report that, do not wave it through.
