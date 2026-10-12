@@ -74,7 +74,9 @@ If you would rather read first, go in order:
 | `templates/statusline-command.sh` | Status line: branch, model, effort, context, rate limits | Optional |
 | `optional/jev-router/` | Message classifier hook and six helper agents | Optional, needs a paid third-party API |
 
-The office dashboard is described in docs/09 but not shipped as code.
+The office dashboard is described in docs/09 but not shipped as code. Here it is running on made-up sessions; the dispatch board and the single-session view are in [docs/09](docs/09-office.md).
+
+![The agent office with made-up sessions](docs/img/office.png)
 
 ## Dependencies
 
@@ -85,7 +87,3 @@ The office dashboard is described in docs/09 but not shipped as code.
 ## Licence
 
 Code and templates (everything under `templates/` and `optional/`) are MIT. The prose docs (`README.md`, `SETUP-FOR-CLAUDE.md`, everything under `docs/`) are CC BY 4.0. See [LICENSE](LICENSE).
-
-## TODO
-
-- Sanitised screenshots of the office and the dispatch board (docs/09). The real ones show private project names.

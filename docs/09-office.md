@@ -1,11 +1,23 @@
 # 09 The office
 
-> **TODO:** sanitised screenshots of the office and the dispatch board. The real ones show private project names, so none ship in this version.
-
 A terminal shows one session. The office shows all of them. It is a small local web server with two pages I keep open on a second screen and a tablet:
 
 - **`/office/`**: an isometric room where each live Claude Code session is a robot. The main loop walks to a station for its current tool (reading, editing, running a command, searching the web). Subagents appear as smaller robots and do the same. A `SendMessage` flies an envelope from sender to recipient. A session waiting on you gets a ring and a "your turn" tag. A session idle for 30 minutes parks in a sleep pod. The router has a desk by the door and stamps a ticket with the lane for every message it sizes. Rain on the window tracks the 5-hour rate limit. The dispatcher has its own robot, a hovering air-traffic controller with a turning radar dish.
 - **`/dash/`**: the dispatch board. Every open task from the ledger, joined to its live manager session and that manager's running agents: status, model, effort, elapsed time, cost, last report, open question.
+
+The screenshots below run on made-up data. The sessions, tasks and questions are invented for this guide.
+
+![The agent office with five made-up sessions at their stations](img/office.png)
+
+*The office. Each robot is a session's main loop or one of its subagents, tagged with the session name or the agent type. `blog` waits in the your-turn ring, and its question is open in the card below it, so you can answer from the page. `docs-site` has been idle long enough to park in a sleep pod. The session log runs bottom left.*
+
+![The dispatch board: the dispatcher card, then one card per open task](img/dispatch-board.png)
+
+*The dispatch board. The dispatcher's card first, then one card per open task: its ledger row, the manager session working it, that session's recent tool calls and its running agents.*
+
+![The single-session view for one manager session](img/session-view.png)
+
+*A session name on the board opens its single-session view: cost, tokens, each agent's model, effort, actions, last words and the brief it was given.*
 
 It is the most fun part of the setup and the least necessary. The ledger and `claude agents` give you the same facts in text. What the office adds is noticing: a robot standing still in the "your turn" ring is hard to miss from across the room.
 
